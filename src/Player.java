@@ -31,7 +31,7 @@ public class Player extends Entity {
     }
 
     public void updatePlayerMovement() {
-        this.facingAngle-=.01f;
+        this.facingAngle-=.05f;
     }
 
     public void move() {

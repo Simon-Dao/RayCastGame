@@ -24,6 +24,8 @@ public class Map {
             gameMap[i][gameMap[i].length - 1] = 1;
         }
 
+        gameMap[3][2] = 1;
+
         return gameMap;
     }
 

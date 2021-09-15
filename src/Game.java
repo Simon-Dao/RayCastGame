@@ -11,7 +11,7 @@ public class Game extends BasicGame {
     //todo temp variable
     private final int scaler = tileSize;
 
-    private final int fov = 200;
+    private final int fov = 100;
 
     public Game(String title) {
         super(title);
@@ -20,9 +20,9 @@ public class Game extends BasicGame {
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
         gameMap = new Map(Main.MAP_WIDTH,Main.MAP_HEIGHT);
-        player = new Player(gameContainer.getInput(),500,500);
+        player = new Player(gameContainer.getInput(),250,250);
         enemies = new Enemy[ENEMY_COUNT];
-        tileSize = Main.WINDOW_HEIGHT/10;
+        tileSize = Main.WINDOW_HEIGHT/Main.MAP_WIDTH;
     }
 
     @Override
@@ -43,19 +43,20 @@ public class Game extends BasicGame {
         float[] distances = getRayLengths(g);
 
         for(int i = 0; i<distances.length; i++) {
-            float width = Main.WINDOW_HEIGHT/fov;
-            float x = width * i;
-            float height = distances[i]/2;
-            float y = 500 - ((Main.WINDOW_HEIGHT - height) / 2);
 
             g.setColor(getShade(distances[i]));
-            g.fillRect(x,y, width, Main.WINDOW_HEIGHT - height * 2);
+            float width = Main.WINDOW_WIDTH/fov;
+            float x = width * i;
+            float height = (distances[i]);
+
+
+            g.fillRect(x,  (Main.WINDOW_HEIGHT/2) - ((Main.WINDOW_HEIGHT - height)/2) , width,Main.WINDOW_HEIGHT -  height);
         }
     }
 
     public Color getShade(float distance) {
 
-        int shade = (int)((1 - (distance/Main.WINDOW_HEIGHT)) * 255);
+        int shade = (int)((1 - (distance/Main.WINDOW_HEIGHT)) * 255) / 2;
 
         return new Color(shade,shade,shade);
     }
@@ -105,10 +106,10 @@ public class Game extends BasicGame {
         }
 
         float dist = (float)Math.sqrt(Math.pow(player.getX()-x,2) + Math.pow(player.getY()-y, 2));
-
         g.setColor(Color.red);
         g.drawLine(player.getX(), player.getY(), x, y);
 
+        dist *= (float)Math.cos(Math.toRadians((player.getFacingAngle()) - angle));
         return dist;
     }
     private boolean rayCollide(float x, float y) {
