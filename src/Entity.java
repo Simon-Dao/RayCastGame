@@ -1,9 +1,9 @@
-public abstract class Entity {
+public class Entity {
 
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Entity(int initialX, int initialY) {
+    public Entity(double initialX, double initialY) {
         this.x = initialX;
         this.y = initialY;
     }
@@ -13,19 +13,19 @@ public abstract class Entity {
         this.y = 0;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 }

@@ -9,6 +9,8 @@ public class Map {
     public Map(int cols, int rows) {
         this.cols = cols;
         this.rows = rows;
+
+        this.gameMap = initMap();
     }
 
     public int[][] initMap() {
@@ -25,7 +27,11 @@ public class Map {
         return gameMap;
     }
 
-    public int getSquare(int x, int y) {
+    public int[][] getGameMap() {
+        return gameMap;
+    }
+
+    public int getTile(int x, int y) {
         return gameMap[y][x];
     }
 
