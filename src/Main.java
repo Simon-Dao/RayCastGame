@@ -5,8 +5,8 @@ public class Main {
 
     private Game renderPipeline;
     private static final String TITLE = "DOOM Java Edition";
-    public static final int WINDOW_HEIGHT = 500;
-    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_HEIGHT = 800;
+    public static final int WINDOW_WIDTH = 800;
     public static final int MAP_WIDTH = 20;
     public static final int MAP_HEIGHT = 20;
 
