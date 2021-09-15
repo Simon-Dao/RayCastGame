@@ -1,9 +1,9 @@
 public class Entity {
 
-    private double x;
-    private double y;
+    private float x;
+    private float y;
 
-    public Entity(double initialX, double initialY) {
+    public Entity(float initialX, float initialY) {
         this.x = initialX;
         this.y = initialY;
     }
@@ -13,19 +13,19 @@ public class Entity {
         this.y = 0;
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(float y) {
         this.y = y;
     }
 }

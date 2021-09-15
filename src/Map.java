@@ -17,7 +17,7 @@ public class Map {
         int[][] gameMap = new int[rows][cols];
 
         Arrays.fill(gameMap[0], 1);
-        Arrays.fill(gameMap[gameMap.length-1],0);
+        Arrays.fill(gameMap[gameMap.length-1],1);
 
         for(int i = 0; i < gameMap.length; i++) {
             gameMap[i][0] = 1;

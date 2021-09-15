@@ -1,19 +1,17 @@
 import org.newdawn.slick.*;
 
-import javax.swing.*;
-
 public class Game extends BasicGame {
 
     private Map gameMap;
     private Player player;
     private Enemy[] enemies;
-    private final int tileSize = 10;
+    private int tileSize;
     private final int ENEMY_COUNT = 3;
 
     //todo temp variable
-    private final int scaler = 5;
+    private final int scaler = tileSize;
 
-    private final int fov = 100;
+    private final int fov = 200;
 
     public Game(String title) {
         super(title);
@@ -21,78 +19,108 @@ public class Game extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        gameMap = new Map(10,10);
-        player = new Player(50,50);
+        gameMap = new Map(Main.MAP_WIDTH,Main.MAP_HEIGHT);
+        player = new Player(gameContainer.getInput(),500,500);
         enemies = new Enemy[ENEMY_COUNT];
+        tileSize = Main.WINDOW_HEIGHT/10;
     }
 
     @Override
     public void update(GameContainer gameContainer, int i) throws SlickException {
-
     }
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
         graphics.clear();
+        renderScene(graphics);
+        //draw2DMap(graphics);
+        //drawPlayer(graphics);
 
-        drawMap(graphics);
-        castRays(graphics);
-
-        //graphics.setColor(Color.blue);
-        //graphics.fillRect(30,30,50,50);
+        player.updatePlayerMovement();
     }
 
-    public void drawMap(Graphics g) {
+    public void renderScene(Graphics g) {
+        float[] distances = getRayLengths(g);
 
+        for(int i = 0; i<distances.length; i++) {
+            float width = Main.WINDOW_HEIGHT/fov;
+            float x = width * i;
+            float height = distances[i]/2;
+            float y = 500 - ((Main.WINDOW_HEIGHT - height) / 2);
+
+            g.setColor(getShade(distances[i]));
+            g.fillRect(x,y, width, Main.WINDOW_HEIGHT - height * 2);
+        }
+    }
+
+    public Color getShade(float distance) {
+
+        int shade = (int)((1 - (distance/Main.WINDOW_HEIGHT)) * 255);
+
+        return new Color(shade,shade,shade);
+    }
+
+    public void draw2DMap(Graphics g) {
         int[][] map = gameMap.getGameMap();
 
-        for(int y = 0; y < map.length; y++) {
-            for(int x = 0 ; x < map[0].length; x++) {
-                switch (gameMap.getTile(x,y)) {
+        getRayLengths(g);
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+
+                switch (map[i][j]) {
                     case WallType.WALL:
-
-                        g.setColor(Color.white);
-                        g.fillRect(x*tileSize*scaler-1, y*tileSize*scaler-1, tileSize*scaler-1,tileSize*scaler-1);
-
+                        g.setColor(Color.green);
+                        g.fillRect(j*tileSize,i*tileSize,tileSize,tileSize);
                         break;
                 }
             }
         }
     }
+    public float[] getRayLengths(Graphics g) {
+        float[] lengths = new float[fov];
 
-    public void castRays(Graphics g) {
-        double angle = player.getFacingAngle();
-        for (int i = 0; i < 1; i++) {
+        float increment = .3f;
+        float offset = 0;
 
-            double[] data = castRay(angle);
-            g.setColor(Color.blue);
-            g.fillOval((float)data[0]*50, (float)data[1]*50, 20, 20);
-        }
-    }
+        for (int i = -fov/2; i < fov/2; i++) {
 
-    public double[] castRay(double angle) {
-        double x = player.getX();
-        double y = player.getY();
-        double distance = 0;
-
-        while(distance > 300 && rayCollide(x,y)) {
-            double dx = Math.cos(Math.toRadians(angle));
-            double dy = Math.sin(Math.toRadians(angle));
-
-            distance += Math.sqrt((dx*dx) + (dy*dy));
-
-            x+=dx;
-            y+=dy;
+            lengths[i + fov/2] = getRayLength(g, player.getFacingAngle() + offset);
+            offset+=increment;
         }
 
-        return new double[]{x,y,distance};
+        return lengths;
+}
+    public float getRayLength(Graphics g, float angle) {
+        float stepSpeed = 1f;
+        float x = player.getX();
+        float y = player.getY();
+
+        while(!rayCollide(x,y)) {
+            float dx = (float)Math.cos(Math.toRadians(angle)) * stepSpeed;
+            float dy = (float)Math.sin(Math.toRadians(angle)) * stepSpeed;
+
+            x += dx;
+            y += dy;
+        }
+
+        float dist = (float)Math.sqrt(Math.pow(player.getX()-x,2) + Math.pow(player.getY()-y, 2));
+
+        g.setColor(Color.red);
+        g.drawLine(player.getX(), player.getY(), x, y);
+
+        return dist;//Math.abs(dist * (float) Math.cos(Math.toRadians(angle)));
     }
+    private boolean rayCollide(float x, float y) {
+        int indexX = (int)(x/tileSize);
+        int indexY = (int)(y/tileSize);
 
-    public boolean rayCollide(double x, double y) {
+        return gameMap.getTile(indexX, indexY) != WallType.EMPTY;
+    }
+    private void drawPlayer(Graphics g) {
+        getRayLengths(g);
 
-        int indexX = (int)x / 10;
-        int indexY = (int)y / 10;
-
-        return gameMap.getTile(indexX,indexY) == WallType.WALL;
+        g.setColor(Color.white);
+        g.fillOval(player.getX()- player.getSize()/2, player.getY()- player.getSize()/2, player.getSize(), player.getSize());
     }
 }
