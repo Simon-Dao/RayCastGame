@@ -28,4 +28,12 @@ public class Entity {
     public void setY(float y) {
         this.y = y;
     }
+
+    public void addX(float dx) {
+        setX(getX()+dx);
+    }
+
+    public void addY(float dy) {
+        setY(getY()+dy);
+    }
 }

@@ -5,6 +5,11 @@ public class Player extends Entity {
     private float facingAngle;
     private float size;
     private Input input;
+    private final float speed = 20;
+
+    private float dx;
+    private float da;
+    private float dy;
 
     public float getFacingAngle() {
         return facingAngle;
@@ -31,11 +36,37 @@ public class Player extends Entity {
     }
 
     public void updatePlayerMovement() {
-        this.facingAngle-=.05f;
+
+        if(input.isKeyDown(Input.KEY_W)) {
+            dx = (float)Math.cos(Math.toRadians(facingAngle)) * speed * Game.deltaTime;
+            dy = (float)Math.sin(Math.toRadians(facingAngle)) * speed * Game.deltaTime;
+        }
+        else
+        if(input.isKeyDown(Input.KEY_S)) {
+            dx = -(float)Math.cos(Math.toRadians(facingAngle)) * speed * Game.deltaTime;
+            dy = -(float)Math.sin(Math.toRadians(facingAngle)) * speed * Game.deltaTime;
+        }
+        else {
+            dx = 0;
+            dy = 0;
+        }
+
+        if(input.isKeyDown(Input.KEY_A)) da = -speed * Game.deltaTime;
+        else
+        if(input.isKeyDown(Input.KEY_D)) da = speed * Game.deltaTime;
+        else
+            da = 0;
+
+        addA(da);
+        move(dx,dy);
     }
 
-    public void move() {
-        setX( getX() + (float)Math.cos(Math.toRadians(facingAngle)) * .01f);
-        setY( getY() + (float)Math.sin(Math.toRadians(facingAngle)) * .01f);
+    public void addA(float da) {
+        setFacingAngle(getFacingAngle()+da);
+    }
+
+    public void move(float dx, float dy) {
+        addX(dx);
+        addY(dy);
     }
 }

@@ -7,6 +7,8 @@ public class Game extends BasicGame {
     private Enemy[] enemies;
     private int tileSize;
     private final int ENEMY_COUNT = 3;
+    private long time = 0;
+    public static float deltaTime;
 
     //todo temp variable
     private final int scaler = tileSize;
@@ -23,6 +25,7 @@ public class Game extends BasicGame {
         player = new Player(gameContainer.getInput(),250,250);
         enemies = new Enemy[ENEMY_COUNT];
         tileSize = Main.WINDOW_HEIGHT/Main.MAP_WIDTH;
+        time = gameContainer.getTime();
     }
 
     @Override
@@ -31,6 +34,10 @@ public class Game extends BasicGame {
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
+        deltaTime = (float)Math.abs(gameContainer.getTime() - time)/(float)1000;
+
+        time = gameContainer.getTime();
+
         graphics.clear();
         renderScene(graphics);
         //draw2DMap(graphics);
@@ -106,8 +113,6 @@ public class Game extends BasicGame {
         }
 
         float dist = (float)Math.sqrt(Math.pow(player.getX()-x,2) + Math.pow(player.getY()-y, 2));
-        g.setColor(Color.red);
-        g.drawLine(player.getX(), player.getY(), x, y);
 
         dist *= (float)Math.cos(Math.toRadians((player.getFacingAngle()) - angle));
         return dist;
