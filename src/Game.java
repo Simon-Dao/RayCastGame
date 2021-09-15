@@ -109,7 +109,7 @@ public class Game extends BasicGame {
         g.setColor(Color.red);
         g.drawLine(player.getX(), player.getY(), x, y);
 
-        return dist;//Math.abs(dist * (float) Math.cos(Math.toRadians(angle)));
+        return dist;
     }
     private boolean rayCollide(float x, float y) {
         int indexX = (int)(x/tileSize);
