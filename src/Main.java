@@ -24,5 +24,6 @@ public class Main {
         AppGameContainer game = new AppGameContainer(renderPipeline);
         game.setDisplayMode(WINDOW_WIDTH,WINDOW_HEIGHT,false);
         game.start();
+
     }
 }

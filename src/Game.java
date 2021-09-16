@@ -40,7 +40,7 @@ public class Game extends BasicGame {
 
         graphics.clear();
         renderScene(graphics);
-        //draw2DMap(graphics);
+        draw2DMap(graphics);
         //drawPlayer(graphics);
 
         player.updatePlayerMovement();
@@ -50,15 +50,15 @@ public class Game extends BasicGame {
 
         float rayX, rayY, rayA, xo, yo, playerAngle = player.getFacingAngle(), px = player.getX(), py = player.getY();
         int mapX, mapY;
-        ra = playerAngle;
-        float aTan = (float)Math.atan(ra);
+        rayA = playerAngle;
+        float aTan = (float)Math.atan(rayA);
 
         //cardinal angles
 
         //horizontal line
         if(playerAngle < 180) {
             rayY = (int)py/tileSize;
-            rayX = (py-ry) * aTan;
+            rayX = (py-rayY) * aTan;
             yo = -tileSize;
             xo = -yo*aTan;
         }

@@ -5,7 +5,7 @@ public class Player extends Entity {
     private float facingAngle;
     private float size;
     private Input input;
-    private final float speed = 20;
+    private final float speed = 40;
 
     private float dx;
     private float da;
@@ -22,7 +22,7 @@ public class Player extends Entity {
 
     public Player(Input input, float x, float y) {
         super(x,y);
-        this.facingAngle = 180;
+        this.facingAngle = 1;
         this.size = 50;
         this.input = input;
     }
