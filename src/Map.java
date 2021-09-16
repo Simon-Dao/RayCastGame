@@ -4,13 +4,24 @@ public class Map {
 
     private int cols;
     private int rows;
-    private int[][] gameMap;
+    private int[][] gameMap = {
+            {1,1,1,1,1,1,1,1,1,1},
+            {1,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,2,2,2,0,1},
+            {1,0,0,0,0,0,0,2,0,1},
+            {1,0,0,0,2,0,0,2,0,1},
+            {1,0,0,0,0,0,0,2,0,1},
+            {1,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,0,0,0,0,1},
+            {1,1,1,1,1,1,1,1,1,1},
+    };
 
     public Map(int cols, int rows) {
         this.cols = cols;
         this.rows = rows;
 
-        this.gameMap = initMap();
+        //this.gameMap = initMap();
     }
 
     public int[][] initMap() {
