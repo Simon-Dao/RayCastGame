@@ -47,18 +47,22 @@ public class Game extends BasicGame {
     }
 
     public void renderScene(Graphics g) {
-        float[] distances = getRayLengths(g);
 
-        for(int i = 0; i<distances.length; i++) {
+        float rayX, rayY, rayA, xo, yo, playerAngle = player.getFacingAngle(), px = player.getX(), py = player.getY();
+        int mapX, mapY;
+        ra = playerAngle;
+        float aTan = (float)Math.atan(ra);
 
-            g.setColor(getShade(distances[i]));
-            float width = Main.WINDOW_WIDTH/fov;
-            float x = width * i;
-            float height = (distances[i]);
+        //cardinal angles
 
-
-            g.fillRect(x,  (Main.WINDOW_HEIGHT/2) - ((Main.WINDOW_HEIGHT - height)/2) , width,Main.WINDOW_HEIGHT -  height);
+        //horizontal line
+        if(playerAngle < 180) {
+            rayY = (int)py/tileSize;
+            rayX = (py-ry) * aTan;
+            yo = -tileSize;
+            xo = -yo*aTan;
         }
+
     }
 
     public Color getShade(float distance) {
@@ -85,48 +89,6 @@ public class Game extends BasicGame {
             }
         }
     }
-    public float[] getRayLengths(Graphics g) {
-        float[] lengths = new float[fov];
 
-        float increment = .3f;
-        float offset = 0;
 
-        for (int i = -fov/2; i < fov/2; i++) {
-
-            lengths[i + fov/2] = getRayLength(g, player.getFacingAngle() + offset);
-            offset+=increment;
-        }
-
-        return lengths;
-}
-    public float getRayLength(Graphics g, float angle) {
-        float stepSpeed = 1f;
-        float x = player.getX();
-        float y = player.getY();
-
-        while(!rayCollide(x,y)) {
-            float dx = (float)Math.cos(Math.toRadians(angle)) * stepSpeed;
-            float dy = (float)Math.sin(Math.toRadians(angle)) * stepSpeed;
-
-            x += dx;
-            y += dy;
-        }
-
-        float dist = (float)Math.sqrt(Math.pow(player.getX()-x,2) + Math.pow(player.getY()-y, 2));
-
-        dist *= (float)Math.cos(Math.toRadians((player.getFacingAngle()) - angle));
-        return dist;
-    }
-    private boolean rayCollide(float x, float y) {
-        int indexX = (int)(x/tileSize);
-        int indexY = (int)(y/tileSize);
-
-        return gameMap.getTile(indexX, indexY) != WallType.EMPTY;
-    }
-    private void drawPlayer(Graphics g) {
-        getRayLengths(g);
-
-        g.setColor(Color.white);
-        g.fillOval(player.getX()- player.getSize()/2, player.getY()- player.getSize()/2, player.getSize(), player.getSize());
-    }
 }
