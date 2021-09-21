@@ -1,43 +1,75 @@
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Map {
 
     private int cols;
     private int rows;
-    private int[][] gameMap = {
-            {1,1,1,1,1,1,1,1,1,1},
-            {1,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,2,2,2,0,1},
-            {1,0,0,0,0,0,0,2,0,1},
-            {1,0,0,0,2,0,0,2,0,1},
-            {1,0,0,0,0,0,0,2,0,1},
-            {1,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,1},
-            {1,1,1,1,1,1,1,1,1,1},
-    };
+    private int[][] gameMap;
 
-    public Map(int cols, int rows) {
-        this.cols = cols;
-        this.rows = rows;
+    public Map() {
 
-        //this.gameMap = initMap();
+        loadMap();
     }
 
-    public int[][] initMap() {
-        int[][] gameMap = new int[rows][cols];
+    public void createMap() {
+        File file = new File("C:\\Users\\simon\\IdeaProjects\\RayCastingEngine\\src\\map\\map.txt");
 
-        Arrays.fill(gameMap[0], 1);
-        Arrays.fill(gameMap[gameMap.length-1],1);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 20; i++) {
+                String line = "";
+                for (int j = 0; j < 20; j++) {
+                    if(i == 0 || j == 0 || i == 19 || j == 19)
+                        line+="1 ";
+                    else
+                        line+="0 ";
+                }
+                sb.append(line+"\n");
+            }
+            writer.write(sb.toString());
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        for(int i = 0; i < gameMap.length; i++) {
-            gameMap[i][0] = 1;
-            gameMap[i][gameMap[i].length - 1] = 1;
+    public void loadMap() {
+        try {
+            List<List<Integer>> map = new ArrayList<>();
+
+            Scanner scan = new Scanner(new File("C:\\Users\\simon\\IdeaProjects\\RayCastingEngine\\src\\map\\map.txt"));
+            while(scan.hasNextLine()) {
+                String line = scan.nextLine();
+                String[] colum = line.split(" ");
+
+                List<Integer> columArr = new ArrayList<>();
+
+                for (int i = 0; i < colum.length; i++) {
+                    columArr.add(Integer.valueOf(colum[i]));
+                }
+                map.add(columArr);
+            }
+
+            gameMap = new int[map.size()][map.get(0).size()];
+
+            for(int i = 0; i<map.size(); i++) {
+                List<Integer> row = map.get(i);
+
+                for (int j = 0; j < row.size(); j++) {
+                    gameMap[i][j] = row.get(j);
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
-        gameMap[3][2] = 1;
-
-        return gameMap;
     }
 
     public int[][] getGameMap() {

@@ -21,7 +21,7 @@ public class Game extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        gameMap = new Map(Main.MAP_WIDTH,Main.MAP_HEIGHT);
+        gameMap = new Map();
         player = new Player(gameContainer.getInput(),250,250);
         enemies = new Enemy[ENEMY_COUNT];
         tileSize = Main.WINDOW_HEIGHT/Main.MAP_WIDTH;
@@ -47,48 +47,33 @@ public class Game extends BasicGame {
     }
 
     public void renderScene(Graphics g) {
-        float[][] data = getRayLengths(g);
+        Ray[] rays = getRays(g);
 
-        for(int i = 0; i<data.length; i++) {
+        for(int i = 0; i<rays.length; i++) {
 
-            g.setColor(getShade(data[i]));
+            //get the color for the wall
+            Color color = getTextureColor(rays[i]);
+
             float width = Main.WINDOW_WIDTH/fov;
             float x = width * i;
-            float height = (Main.WINDOW_HEIGHT * tileSize) / data[i][0];
+            float height = (Main.WINDOW_HEIGHT * tileSize) / rays[i].getLength();
 
             g.fillRect(x,  (Main.WINDOW_HEIGHT/2) - (height/2) , width, height);
         }
     }
 
-    public Color getShade(float[] data) {
-        float distance = data[0];
-        float tileType = data[1];
+    public Color getTextureColor(Ray ray) {
 
-        int r = 255;
-        int g = 255;
-        int b = 255;
+        int tileX = (int)(ray.getX() % tileSize);
+        int tileY = (int)(ray.getY() % tileSize);
 
-        switch ((int)tileType) {
-            case WallType.WALL:
-                int shade = (int)((1 - (distance/Main.WINDOW_HEIGHT)) * 255) / 2;
-                r = shade; g = shade; b = shade;
-                break;
-            case WallType.GREEN_WALL:
-                r = 0;
-                b = 0;
-                g = (int)((1 - (distance/Main.WINDOW_HEIGHT)) * 255) / 2;
-                break;
-        }
-
-
-
-        return new Color(r,g,b);
+        int index =
     }
 
     public void draw2DMap(Graphics g) {
         int[][] map = gameMap.getGameMap();
 
-        getRayLengths(g);
+        getRays(g);
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
@@ -106,24 +91,21 @@ public class Game extends BasicGame {
         }
     }
 
-    public float[][] getRayLengths(Graphics g) {
-        float[][] lengths = new float[fov][2];
+    public Ray[] getRays(Graphics g) {
+        Ray[] rays = new Ray[fov];
 
         float increment = .3f;
         float offset = 0;
 
         for (int i = -fov/2; i < fov/2; i++) {
 
-            float[] data = getRayData(g, player.getFacingAngle() + offset);
-
-            lengths[i + fov/2][0] = data[0];
-            lengths[i + fov/2][1] = data[1];
+            rays[i + fov/2] = getRayData(g, player.getFacingAngle() + offset);
             offset+=increment;
         }
 
-        return lengths;
+        return rays;
 }
-    public float[] getRayData(Graphics g, float angle) {
+    public Ray getRayData(Graphics g, float angle) {
         float stepSpeed = 1f;
         float x = player.getX();
         float y = player.getY();
@@ -139,7 +121,7 @@ public class Game extends BasicGame {
         float dist = (float)Math.sqrt(Math.pow(player.getX()-x,2) + Math.pow(player.getY()-y, 2));
 
         dist *= (float)Math.cos(Math.toRadians((player.getFacingAngle()) - angle));
-        return new float[] {dist, getTileHit(x,y)};
+        return new Ray(x,y,dist, getTileHit(x,y));
     }
     private boolean rayCollide(float x, float y) {
         int indexX = (int)(x/tileSize);
@@ -156,7 +138,7 @@ public class Game extends BasicGame {
     }
 
     private void drawPlayer(Graphics g) {
-        getRayLengths(g);
+        getRays(g);
 
         g.setColor(Color.white);
         g.fillOval(player.getX()- player.getSize()/2, player.getY()- player.getSize()/2, player.getSize(), player.getSize());
