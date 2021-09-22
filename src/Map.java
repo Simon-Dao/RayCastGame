@@ -81,10 +81,13 @@ public class Map {
     }
 
     public void printMap() {
-        for(int[] row : gameMap)
-            for(int col : row)
-                System.out.print(col);
+
+        for (int i = 0; i < gameMap.length; i++) {
+            for (int j = 0; j < gameMap[0].length; j++) {
+                System.out.print(gameMap[i][j]);
+            }
             System.out.println();
+        }
     }
 
     public int getCols() {

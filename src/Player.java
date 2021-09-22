@@ -22,7 +22,7 @@ public class Player extends Entity {
 
     public Player(Input input, float x, float y) {
         super(x,y);
-        this.facingAngle = 180;
+        this.facingAngle = 90;
         this.size = 50;
         this.input = input;
     }

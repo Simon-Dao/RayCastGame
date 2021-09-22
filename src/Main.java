@@ -20,9 +20,11 @@ public class Main {
 
     public void start() throws SlickException {
         renderPipeline = new Game(TITLE);
+        new Textures();
 
         AppGameContainer game = new AppGameContainer(renderPipeline);
         game.setDisplayMode(WINDOW_WIDTH,WINDOW_HEIGHT,false);
-        game.start();
+        //game.start();
+
     }
 }

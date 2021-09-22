@@ -19,7 +19,7 @@ public class Textures {
     private static final int WHITE = 9;
 
     //hashmap for all the textures
-    private HashMap<Integer,int[][]> textures = new HashMap<>();
+    private static HashMap<Integer,int[][]> textures = new HashMap<>();
 
     public Textures() {
 
@@ -39,9 +39,14 @@ public class Textures {
         };
 
         textures.put(1, testTexture);
+        textures.put(2, testTexture);
     }
 
-    public Color mapTexture(int textureCode) {
+    public static int[][] get(int code) {
+        return textures.get(code);
+    }
+
+    public static Color mapTexture(int textureCode) {
 
         Color result = new Color(255,255,255);
 
